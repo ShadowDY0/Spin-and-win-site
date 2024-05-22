@@ -95,6 +95,9 @@
                 // Highlight the winning segment
                 drawWheel(index);
                 prizeDisplay.innerText = `Sie haben ${slices[index]} gewonnen! Geben Sie Ihre PayPal-Adresse ein, um Ihren Preis zu erhalten.`;
+                // Disable the spin button after the first spin
+                spinButton.disabled = true;
+                spinButton.style.cursor = "not-allowed";
             }
 
             rotate();
