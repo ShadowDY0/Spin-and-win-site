@@ -43,11 +43,11 @@
         let startAngle = 0;
         const arc = Math.PI / (slices.length / 2);
 
-        function drawWheel() {
+        function drawWheel(highlightIndex = null) {
             slices.forEach((slice, i) => {
                 const angle = startAngle + i * arc;
                 ctx.beginPath();
-                ctx.fillStyle = "#FFFFFF"; // Background color
+                ctx.fillStyle = highlightIndex === i ? "#00FF00" : "#FFFFFF"; // Green for highlight, white otherwise
                 ctx.moveTo(250, 250);
                 ctx.arc(250, 250, 250, angle, angle + arc, false);
                 ctx.fill();
@@ -93,13 +93,7 @@
                 const arcd = arc * 180 / Math.PI;
                 const index = Math.floor((360 - degrees % 360) / arcd);
                 // Highlight the winning segment
-                const winningAngle = startAngle + index * arc;
-                ctx.beginPath();
-                ctx.fillStyle = "#00FF00"; // Green color for the winning segment
-                ctx.moveTo(250, 250);
-                ctx.arc(250, 250, 250, winningAngle, winningAngle + arc, false);
-                ctx.fill();
-                drawWheel();
+                drawWheel(index);
                 prizeDisplay.innerText = `Sie haben ${slices[index]} gewonnen! Geben Sie Ihre PayPal-Adresse ein, um Ihren Preis zu erhalten.`;
             }
 
