@@ -21,6 +21,11 @@
             font-size: 20px;
             cursor: pointer;
         }
+        #prize {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -28,11 +33,13 @@
         <canvas id="canvas" width="500" height="500"></canvas>
     </div>
     <button id="spin">Spin the Wheel!</button>
+    <div id="prize"></div>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const spinButton = document.getElementById('spin');
-        const slices = ["0", "0.1", "0.3", "5", "3", "1"];
+        const prizeDisplay = document.getElementById('prize');
+        const slices = ["€500", "€200", "€300", "€800", "€500"];
         let startAngle = 0;
         const arc = Math.PI / (slices.length / 2);
 
@@ -55,8 +62,29 @@
 
         function spin() {
             const spinAngle = Math.random() * 10 + 10;
-            startAngle += spinAngle;
-            drawWheel();
+            let spinTime = 0;
+            const spinTimeTotal = Math.random() * 3000 + 4000;
+
+            function rotate() {
+                spinTime += 30;
+                if (spinTime >= spinTimeTotal) {
+                    stopRotate();
+                    return;
+                }
+                const spinAngleIncrement = spinAngle - (spinTime / spinTimeTotal) * spinAngle;
+                startAngle += (spinAngleIncrement * Math.PI / 180);
+                drawWheel();
+                requestAnimationFrame(rotate);
+            }
+
+            function stopRotate() {
+                const degrees = startAngle * 180 / Math.PI + 90;
+                const arcd = arc * 180 / Math.PI;
+                const index = Math.floor((360 - degrees % 360) / arcd);
+                prizeDisplay.innerText = `You have won ${slices[index]}! Claim your prize!`;
+            }
+
+            rotate();
         }
 
         spinButton.addEventListener('click', spin);
