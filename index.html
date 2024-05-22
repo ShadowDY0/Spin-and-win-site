@@ -32,7 +32,7 @@
     <div id="wheel">
         <canvas id="canvas" width="500" height="500"></canvas>
     </div>
-    <button id="spin">Spin the Wheel!</button>
+    <button id="spin">Drehen und gewinnen!</button>
     <div id="prize"></div>
     <script>
         const canvas = document.getElementById('canvas');
@@ -58,7 +58,17 @@
                 ctx.rotate(angle + arc / 2 + Math.PI / 2);
                 ctx.fillText(slice, -ctx.measureText(slice).width / 2, 0);
                 ctx.restore();
+                // Draw lines to separate segments
+                ctx.beginPath();
+                ctx.moveTo(250, 250);
+                ctx.lineTo(250 + Math.cos(angle) * 250, 250 + Math.sin(angle) * 250);
+                ctx.stroke();
             });
+            // Draw center dot
+            ctx.beginPath();
+            ctx.arc(250, 250, 10, 0, Math.PI * 2, false);
+            ctx.fillStyle = "black";
+            ctx.fill();
         }
 
         function spin() {
@@ -82,6 +92,14 @@
                 const degrees = startAngle * 180 / Math.PI + 90;
                 const arcd = arc * 180 / Math.PI;
                 const index = Math.floor((360 - degrees % 360) / arcd);
+                // Highlight the winning segment
+                const winningAngle = startAngle + index * arc;
+                ctx.beginPath();
+                ctx.fillStyle = "#00FF00"; // Green color for the winning segment
+                ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 250, winningAngle, winningAngle + arc, false);
+                ctx.fill();
+                drawWheel();
                 prizeDisplay.innerText = `Sie haben ${slices[index]} gewonnen! Geben Sie Ihre PayPal-Adresse ein, um Ihren Preis zu erhalten.`;
             }
 
